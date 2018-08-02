@@ -56,6 +56,7 @@
 #include <vector>
 #include "cudd.h"
 
+namespace CUDD{
 /*---------------------------------------------------------------------------*/
 /* Type definitions                                                          */
 /*---------------------------------------------------------------------------*/
@@ -746,5 +747,8 @@ public:
 
 }; // Cudd
 
+    std::ostream & operator<<(std::ostream & os, BDD const & f);
+
+} // namespace CUDD
 
 #endif

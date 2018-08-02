@@ -71,6 +71,7 @@ using std::sort;
 // Members of class Capsule
 // ---------------------------------------------------------------------------
 
+namespace CUDD{
 /**
   @brief Class for reference counting of CUDD managers.
 
@@ -100,7 +101,9 @@ public:
     int ref;
     bool verbose;
 };
+}
 
+using namespace CUDD;
 
 Capsule::Capsule(
   unsigned int numVars,
@@ -667,7 +670,7 @@ BDD::operator-=(
 } // BDD::operator-=
 
 
-ostream & operator<<(ostream & os, BDD const & f)
+ostream & CUDD::operator<<(ostream & os, BDD const & f)
 {
     if (!f.node) defaultError("empty DD.");
     DdManager *mgr = f.p->manager;
@@ -1571,7 +1574,7 @@ Cudd::zddZero() const
 
 } // Cudd::zddZero
 
-
+namespace CUDD{
 void
 defaultError(
   string message)
@@ -1579,7 +1582,7 @@ defaultError(
     throw std::logic_error(message);
 
 } // defaultError
-
+}
 
 // ---------------------------------------------------------------------------
 // All the rest
