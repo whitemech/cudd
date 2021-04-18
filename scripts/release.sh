@@ -8,9 +8,10 @@ prefix="/usr/local"
 includedir="${prefix}/include/"
 
 OUTPUT_DIR="${RELEASE_NAME}"
+OUTPUT_TAR="${RELEASE_NAME}.tar.gz"
 
 ./configure --includedir "${includedir}" --enable-silent-rules --enable-obj --enable-dddmp --enable-shared --prefix="${prefix}"
-make -j4 && make install-strip
+make -j4
 
 rm -rf "${OUTPUT_DIR}"
 mkdir "${OUTPUT_DIR}"
@@ -31,6 +32,7 @@ cp -P cudd/cudd.h "${OUTPUT_DIR}"/include/
 cp -P cplusplus/cuddObj.hh "${OUTPUT_DIR}"/include/
 cp -P dddmp/dddmp.h "${OUTPUT_DIR}"/include/
 
-tar -c "${OUTPUT_DIR}" -f "${RELEASE_NAME}.tar.gz"
+tar -c "${OUTPUT_DIR}" -f "${OUTPUT_TAR}"
 rm -r "${OUTPUT_DIR}"
 
+echo "Output in ${OUTPUT_TAR}"
