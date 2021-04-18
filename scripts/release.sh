@@ -1,27 +1,36 @@
 #!/usr/bin/env bash
 
+PLATFORM="linux"
+ARCH="amd64"
+VERSION="3.0.0"
+RELEASE_NAME="cudd_${VERSION}_${PLATFORM}-${ARCH}"
 prefix="/usr/local"
-includedir="${prefix}/include/cudd"
+includedir="${prefix}/include/"
 
-./configure --includedir "${includedir}" --enable-silent-rules --enable-obj --enable-dddmp --enable-shared\n
-make -j && sudo make install-strip
+OUTPUT_DIR="${RELEASE_NAME}"
 
-rm -rf release
-mkdir release
-cp README release/
+./configure --includedir "${includedir}" --enable-silent-rules --enable-obj --enable-dddmp --enable-shared --prefix="${prefix}"
+make -j4 && make install-strip
 
-mkdir release/lib
-cp -P cudd/.libs/libcudd.lai release/lib/libcudd.la
-cp -P cudd/.libs/libcudd.a release/lib 
-chmod 664 release/lib/libcudd.a
-strip --strip-debug release/lib/libcudd.a
+rm -rf "${OUTPUT_DIR}"
+mkdir "${OUTPUT_DIR}"
+cp README "${OUTPUT_DIR}"
 
+mkdir "${OUTPUT_DIR}"/lib
+cp -P cudd/.libs/libcudd.lai "${OUTPUT_DIR}"/lib/libcudd.la
+cp -P cudd/.libs/libcudd.a "${OUTPUT_DIR}"/lib
+cp -P cudd/libcudd.la "${OUTPUT_DIR}"/lib
+# works only if configured with --enabled-shared
+cp -P cudd/.libs/libcudd.so "${OUTPUT_DIR}"/lib/ || true
+cp -P cudd/.libs/libcudd-3* "${OUTPUT_DIR}"/lib/ || true
 
-mkdir release/include
-mkdir release/include/cudd
-cp cudd/cudd.h release/include/cudd
-cp dddmp/dddmp.h release/include/cudd
-cp cplusplus/cuddObj.hh release/include/cudd
+strip --strip-debug "${OUTPUT_DIR}"/lib/libcudd.a
 
-zip -r release.zip release
+mkdir "${OUTPUT_DIR}"/include
+cp -P cudd/cudd.h "${OUTPUT_DIR}"/include/
+cp -P cplusplus/cuddObj.hh "${OUTPUT_DIR}"/include/
+cp -P dddmp/dddmp.h "${OUTPUT_DIR}"/include/
+
+tar -c "${OUTPUT_DIR}" -f "${RELEASE_NAME}.tar.gz"
+rm -r "${OUTPUT_DIR}"
 
